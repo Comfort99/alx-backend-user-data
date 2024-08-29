@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """ Logging Model """
 import logging
+import mysql.connector
+from os import environ
 from typing import List
 import re
-from os import environ
-import mysql.connector
 
 
-PII_FIELDS = ["name", "email", "phone", "ssn", "password"]
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 def filter_datum(fields: List[str], redaction: str,

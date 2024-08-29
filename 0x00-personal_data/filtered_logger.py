@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ Logging Model """
 import logging
-import mysql.connector
+from mysql.connector.connection import MySQLConnection
 from os import environ
 from typing import List
 import re
@@ -32,19 +32,21 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-
-def get_db() -> mysql.connector.connection.MySQLConnection:
+def get_db() -> MySQLConnection:
     """ Return a connector to MySQL database """
     username = environ.get("PERSONAL_DATA_DB_USERNAME", "root")
-    password = environ.get("PERSONAL_DATA_DB_PASSWORD", "")
+    passwrd = environ.get("PERSONAL_DATA_DB_PASSWORD", "")
     host = environ.get("PERSONAL_DATA_DB_HOST", "localhost")
     db_name = environ.get("PERSONAL_DATA_DB_NAME")
 
-    cnx = mysql.connector.connection.MySQLConnection(user=username,
-                                                     password=password,
-                                                     host=host,
-                                                     database=db_name)
-    return cnx
+    try:
+        connection = mysql.connector.connect(usr=username,
+                                             password=passwrd,
+                                             host=host,
+                                             database=db_name)
+    except mysql.connection.Error as error:
+        print(error)
+    return connection
 
 
 def main():

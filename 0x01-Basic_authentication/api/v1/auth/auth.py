@@ -19,13 +19,17 @@ class Auth:
             bool"""
         if path is None:
             return True
-        if not excluded_paths:
+        if not excluded_paths or len(excluded_paths) == 0:
             return True
 
-        path = path if path.endswith('/') else path + '/'
+        if not path.endswith('/'):
+            path += '/'
 
         for excluded_path in excluded_paths:
-            if excluded_path == path:
+            if excluded_path.endswith('*'):
+                if path.startswith(excluded_path[:-1]):
+                    return False
+            elif path == excluded_path:
                 return False
 
         return True

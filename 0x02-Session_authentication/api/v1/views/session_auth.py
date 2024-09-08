@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """ Module Login Session Authentication """
-from flask import jsonify, request, abort
 from api.v1.views import app_views
+from flask import jsonify, request, abort
 from models.user import User
-import os
+from os import getenv
 
 
 @app_views.route('/auth_session/login',
                  methods=['POST'], strict_slashes=False)
 def Login():
-    """ Handles the POST /auth_session/login route for
+    """ Handles the login
+    POST /auth_session/login route for
     session authentication.
 
     Returns:
@@ -45,7 +46,7 @@ def Login():
 
     response = jsonify(user.to_json())
 
-    session_name = os.getenv("SESSION_NAME")
+    session_name = getenv("SESSION_NAME")
     response.set_cookie(session_name, session_id)
 
     return response

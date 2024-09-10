@@ -24,6 +24,9 @@ elif AUTH_TYPE == "basic_auth":
 elif AUTH_TYPE == "session_auth":
     from api.v1.auth.session_auth import SessionAuth
     auth = SessionAuth()
+elif AUTH_TYPE == "session_exp_auth":
+    from api.v1.auth.session_exp_auth import SessionExpAuth
+    auth = SessionExpAuth()
 
 
 @app.errorhandler(404)
@@ -71,4 +74,4 @@ def before_request():
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
-    app.run(host=host, port=port)
+    app.run(host=host, port=port, debug=True)

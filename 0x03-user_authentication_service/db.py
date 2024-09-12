@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""DB module
-"""
+""" Database for sqlalchemy ORM """
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import InvalidRequestError
@@ -9,8 +8,7 @@ from user import Base, User
 
 
 class DB:
-    """DB class
-    """
+    """ DB Class for Object Reational Mapping """
 
     def __init__(self):
         """ Constructor Method """
@@ -31,15 +29,9 @@ class DB:
         """ A method that adds a user to the database
         return:
              User  Object"""
-        try:
-            exist_user = self._session.query(User).filter_by(email).first()
-            if exist_user:
-                raise ValueError
-            user = User(email=email, hashed_password=hashed_password)
-            self._session.add(user)
-            self._session.commit()
-        except Exception as e:
-            print(e)
+        user = User(email=email, hashed_password=hashed_password)
+        self._session.add(user)
+        self._session.commit()
 
         return user
 

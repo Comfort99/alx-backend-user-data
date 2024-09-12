@@ -12,18 +12,16 @@ class DB:
     """DB class
     """
 
-    def __init__(self) -> None:
-        """Initialize a new DB instance
-        """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
+    def __init__(self):
+        """ Constructor Method """
+        self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
 
     @property
-    def _session(self) -> Session:
-        """Memoized session object
-        """
+    def _session(self):
+        """ Session Getter Method """
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
@@ -33,9 +31,15 @@ class DB:
         """ A method that adds a user to the database
         return:
              User  Object"""
-        user = User(email=email, hashed_password=hashed_password)
-        self._session.add(user)
-        self._session.commit()
+        try:
+            exist_user = self._session.query(User).filter_by(email).first()
+            if exist_user:
+                raise ValueError
+            user = User(email=email, hashed_password=hashed_password)
+            self._session.add(user)
+            self._session.commit()
+        except Exception as e:
+            print(e)
 
         return user
 
